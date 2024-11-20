@@ -13,21 +13,9 @@ String::String()
 
 String::String(const String& rhs)
 {
-}
-
-String::String(const char* cstr)
-{
-	thisString = cstr;
-}
-
-String& String::operator=(const String& rhs)
-{
-	// TODO: insert return statement here
-}
-
-char& String::operator[](size_t i)
-{
-	// TODO: insert return statement here
+	stringCapacity = rhs.size() * 2;
+	thisConstString = new char[stringCapacity];
+	
 }
 
 const char& String::operator[](size_t i) const
@@ -37,12 +25,12 @@ const char& String::operator[](size_t i) const
 
 size_t String::size() const
 {
-	return size_t();
+	return stringSize;
 }
 
 size_t String::capacity() const
 {
-	return size_t();
+	return stringCapacity;
 }
 
 void String::push_back(char c)
@@ -73,6 +61,6 @@ std::ostream& operator<<(std::ostream& out, const String& rhs)
 }
 
 void String::Invariant() {
-	assert(size <= capacity);
+	assert(size() <= capacity());
 	//Obs! Ändra och lägg till så det passar er klass
 }

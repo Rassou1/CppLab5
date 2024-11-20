@@ -5,13 +5,15 @@
 #endif
 #endif
 
-//#define VG
-
 #include <crtdbg.h>
 #include <String.h>
 #include "String.h"
 #include <iostream>
 #include <cassert>
+
+//#define VG
+
+
 
 using std::cout;
 

@@ -2,7 +2,9 @@
 #include <iostream>
 class String
 {
-	char* thisString;
+	const char* thisConstString;
+	int stringSize;
+	int stringCapacity;
 
 public:
 	String();
