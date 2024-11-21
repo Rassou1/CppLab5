@@ -18,28 +18,28 @@
 using std::cout;
 
 void AssertStrEqual(const String& lhs, const char* rhs) {
-    for (size_t i = 0; i < lhs.size() && *rhs != '\0'; ++i) {
+    for (size_t i = 0; i < lhs.size && *rhs != '\0'; ++i) {
         assert(lhs[i] == rhs[i]);
         assert(rhs[i] != 0);
     }
-    assert(rhs[lhs.size()] == 0);
+    assert(rhs[lhs.size] == 0);
 }
 
 void TestCapacitySetting() {
     {
         String s, r;
-        int size = s.size();
+        int size = s.size;
         for (int i = 0; i < size * 2 + 16; ++i)
             r.push_back('a' + i % 26);
         s = r;
-        assert(s.size() <= s.capacity());
+        assert(s.size <= s.capacity);
     }
     {
         String r;
         for (int i = 0; i < 65; ++i)
             r.push_back('a' + i % 26);
         String s(r);
-        assert(s.size() <= s.capacity());
+        assert(s.size <= s.capacity);
     }
 }
 
@@ -54,8 +54,8 @@ void TestPushBack() {
         int size = 65;
         for (int i = 0; i < size; ++i)
             r.push_back('a' + i % 26);
-        assert(r.size() <= r.capacity());
-        assert(r.size() == size);
+        assert(r.size <= r.capacity);
+        assert(r.size == size);
     }
 
     //Test No Extra Alloc
@@ -64,24 +64,25 @@ void TestPushBack() {
         int size = 65;
         for (size = 0; size < 65; ++size)
             r.push_back('a' + size % 26);
-        while (r.size() >= r.capacity()) {
+        while (r.size >= r.capacity) {
             r.push_back('a' + size % 26);
             ++size;
         }
         const char* ptr = r.data();
-        int cap = r.capacity();
+        int cap = r.capacity;
         while (ptr == r.data())
         {
             r.push_back('x');
         }
-        assert(r.size() == cap + 1);
+        
+(r.size == cap + 1);
     }
 }
 
 void TestPushBackReallocation() {
     String str("hej");
-    assert(str.size() <= str.capacity());
-    assert(str.size() == 3);
+    assert(str.size <= str.capacity);
+    assert(str.size == 3);
     auto hej = "hej";
     AssertStrEqual(str, hej);
     AssertStrEqual(str, "hej");
@@ -93,28 +94,31 @@ void TestPushBackReallocation() {
 #endif //VG
 
     auto internalBuf = &str[0];
-    auto cap = str.capacity();
-    auto siz = str.size();
+    auto cap = str.capacity;
+    auto siz = str.size;
     size_t i;
     for (i = siz + 1; i <= cap; ++i) {
         str.push_back(char(i) + 'a');
         assert(internalBuf == &str[0]);
-        assert(cap == str.capacity());
-        assert(i == str.size());
+        assert(cap == str.capacity);
+        assert(i == str.size);
     }
     str.push_back(char(i));
     assert(internalBuf != &str[0]);
-    assert(cap < str.capacity());
-    assert(i == str.size());
+    assert(cap < str.capacity);
+    assert(i == str.size);
 }
 
 void TestForPassingString() {
     String str0;
     AssertStrEqual(str0, "");
 
-    String s1("foo"); assert(s1 == "foo");
-    String str(s1); assert(str == "foo");
-    String s3("bar");  assert(s3 == "bar");
+    String s1("foo"); 
+    assert(s1 == "foo");
+    String str(s1);
+    assert(str == "foo");
+    String s3("bar"); 
+    assert(s3 == "bar");
 
     delete new String("hej");
 
@@ -210,21 +214,21 @@ void TestNoExtraAlloc() {
     int size;
     for (size = 0; size < 33; ++size)
         r.push_back('a' + size % 26);
-    while (r.size() >= r.capacity()) {
+    while (r.size >= r.capacity) {
         r.push_back('a' + size % 26);
         ++size;
     }
 
     String* sPtr;
-    sPtr = MakeString(r.size() - 1);
-    //sPtr->reserve(sPtr->size() + 1);  Something about VG
+    sPtr = MakeString(r.size - 1);
+    sPtr->Reserve(sPtr->size + 1);
     const char* dPtr;
     dPtr = sPtr->data();
     *sPtr = r;
     assert(dPtr == sPtr->data());
     delete sPtr;
 
-    sPtr = MakeString(r.size() - 1);
+    sPtr = MakeString(r.size - 1);
     dPtr = sPtr->data();
     *sPtr = r;
     assert(dPtr != sPtr->data());

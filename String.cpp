@@ -1,40 +1,84 @@
 #include "String.h"
 #include <cassert>
+#include <cstring>
 
 String::~String()
 {
+	Invariant();
 
+	delete[] thisString;
 }
 
-String::String()
+String::String() : size(0), capacity(0), thisString(new char[1] {})
 {
-
+	Invariant();
 }
 
-String::String(const String& rhs)
+String::String(const String& rhs) : size(rhs.size), capacity(size + 5), thisString(new char[capacity] {})
 {
-	stringCapacity = rhs.size() * 2;
-	thisConstString = new char[stringCapacity];
-	
+	std::memcpy(thisString, rhs.thisString, size);
+	Invariant();
+}
+
+String::String(const char* cstr) : size(strlen(cstr)), capacity(size + 5), thisString(new char[capacity] {})
+{
+	std::memcpy(thisString, cstr, size);
+	Invariant();
+}
+
+String& String::operator=(const String& rhs)
+{
+	Invariant();
+
+	if (this == &rhs)
+		return *this;
+
+	if (capacity < rhs.getSize()) {
+		delete[] thisString;
+		capacity = rhs.getCapacity();
+		thisString = new char[capacity];
+	}
+
+	size = rhs.size;
+	std::memcpy(thisString, rhs.thisString, size);
+	Invariant();
+}
+
+char& String::operator[](size_t i)
+{
+	return thisString[i];
 }
 
 const char& String::operator[](size_t i) const
 {
-	// TODO: insert return statement here
+	return thisString[i];
 }
 
-size_t String::size() const
+size_t String::getSize() const
 {
-	return stringSize;
+	return size;
 }
 
-size_t String::capacity() const
+size_t String::getCapacity() const
 {
-	return stringCapacity;
+	return capacity;
 }
 
 void String::push_back(char c)
 {
+	Invariant();
+
+	if (size == capacity) {
+		if (capacity == 0) {
+			Reserve(1);
+		}
+		else {
+			Reserve(capacity * 2);
+		}
+	}
+
+	thisString[size++] = c;
+	Invariant();
 }
 
 const char* String::data() const
@@ -44,23 +88,41 @@ const char* String::data() const
 
 bool operator==(const String& lhs, const String& rhs)
 {
-	return false;
+	if(lhs.getSize() != rhs.getSize())
+		return false;
+
+	for (int i = 0; i < lhs.getSize(); i++) {
+		if (lhs[i] != rhs[i])
+			return false;
+	}
+
+	return true;
 }
 
-bool operator!=(const String& lhs, const String& rhs)
+bool operator!=(const String& lhs, const String& rhs) 
 {
-	return false;
+	return !(lhs == rhs);
 }
+
 
 std::ostream& operator<<(std::ostream& out, const String& rhs)
 {
-	for (size_t i = 0; i < rhs.size(); ++i)
+	for (size_t i = 0; i < rhs.getSize(); ++i)
 		out << rhs[i];
 	return out;
-	// TODO: insert return statement here
 }
 
 void String::Invariant() {
-	assert(size() <= capacity());
-	//Obs! Ändra och lägg till så det passar er klass
+	assert(capacity >= 0);
+	assert(size >= 0);
+	assert(size <= capacity);
+}
+
+void String::Reserve(size_t newCapacity) {
+	assert(newCapacity > capacity);
+	char* newString = new char[newCapacity];
+	std::memcpy(newString, thisString, size);
+	delete[] thisString;
+	thisString = newString;
+	capacity = newCapacity;
 }

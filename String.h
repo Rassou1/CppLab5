@@ -2,11 +2,13 @@
 #include <iostream>
 class String
 {
-	const char* thisConstString;
-	int stringSize;
-	int stringCapacity;
+    char* thisString;
 
 public:
+
+	size_t size;
+	size_t capacity;
+
 	String();
 
 	String(const String& rhs);
@@ -19,9 +21,9 @@ public:
 
 	const char& operator[](size_t i) const;
 
-	size_t size() const;
+	size_t getSize() const;
 
-	size_t capacity() const;
+	size_t getCapacity() const;
 
 	void push_back(char c);
 
@@ -34,6 +36,10 @@ public:
 	friend std::ostream& operator<< (std::ostream& out, const String& rhs);
 
 	void Invariant();
+
+	void Reserve(size_t newCapacity);
+
+	void Resize();
 
 	~String();
 
