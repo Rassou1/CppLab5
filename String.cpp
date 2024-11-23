@@ -10,17 +10,17 @@ String::~String()
 }
 
 String::String() : size(0), capacity(0), thisString(new char[1] {})
-{
+{	
 	Invariant();
 }
 
-String::String(const String& rhs) : size(rhs.size), capacity(size + 5), thisString(new char[capacity] {})
+String::String(const String& rhs) : size(rhs.size), capacity(rhs.capacity), thisString(new char[capacity] {})
 {
 	std::memcpy(thisString, rhs.thisString, size);
 	Invariant();
 }
 
-String::String(const char* cstr) : size(strlen(cstr)), capacity(size + 5), thisString(new char[capacity] {})
+String::String(const char* cstr) : size(strlen(cstr)), capacity(size + 10), thisString(new char[capacity] {})
 {
 	std::memcpy(thisString, cstr, size);
 	Invariant();
@@ -33,15 +33,17 @@ String& String::operator=(const String& rhs)
 	if (this == &rhs)
 		return *this;
 
-	if (capacity < rhs.getSize()) {
+	if (capacity < rhs.size) {
 		delete[] thisString;
-		capacity = rhs.getCapacity();
+		this->capacity = rhs.capacity;
 		thisString = new char[capacity];
 	}
 
 	size = rhs.size;
 	std::memcpy(thisString, rhs.thisString, size);
 	Invariant();
+
+	return *this;
 }
 
 char& String::operator[](size_t i)
@@ -88,10 +90,10 @@ const char* String::data() const
 
 bool operator==(const String& lhs, const String& rhs)
 {
-	if(lhs.getSize() != rhs.getSize())
+	if(lhs.size != rhs.size)
 		return false;
 
-	for (int i = 0; i < lhs.getSize(); i++) {
+	for (int i = 0; i < lhs.size; i++) {
 		if (lhs[i] != rhs[i])
 			return false;
 	}

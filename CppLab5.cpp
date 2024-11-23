@@ -116,7 +116,7 @@ void TestForPassingString() {
     String s1("foo"); 
     assert(s1 == "foo");
     String str(s1);
-    assert(str == "foo");
+    assert(str == "foo"); //current bug is that s1 is not copied correctly.
     String s3("bar"); 
     assert(s3 == "bar");
 
