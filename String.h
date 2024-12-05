@@ -2,12 +2,13 @@
 #include <iostream>
 class String
 {
-    char* thisString;
+    
 
 public:
 
 	size_t size;
 	size_t capacity;
+	char* thisString;
 
 	String();
 
@@ -39,9 +40,6 @@ public:
 
 	void Reserve(size_t newCapacity);
 
-	void Resize();
-
 	~String();
 
 };
-

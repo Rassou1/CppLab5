@@ -39,7 +39,7 @@ String& String::operator=(const String& rhs)
 		thisString = new char[capacity];
 	}
 
-	size = rhs.size;
+	this->size = rhs.size;
 	std::memcpy(thisString, rhs.thisString, size);
 	Invariant();
 
@@ -85,7 +85,7 @@ void String::push_back(char c)
 
 const char* String::data() const
 {
-	return nullptr;
+	return thisString;
 }
 
 bool operator==(const String& lhs, const String& rhs)
